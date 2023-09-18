@@ -30,5 +30,4 @@ CHIP Not16 {
     Nand(a=in[13], b=in[13], out=out[13]);    
     Nand(a=in[14], b=in[14], out=out[14]);    
     Nand(a=in[15], b=in[15], out=out[15]);
-    
 }
