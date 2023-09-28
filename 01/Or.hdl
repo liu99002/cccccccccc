@@ -10,7 +10,7 @@
  */
 
 CHIP Or {
-    IN a, b;
+    IN a, b ;
     OUT out;
 
     PARTS:
