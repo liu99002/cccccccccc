@@ -14,7 +14,7 @@ CHIP Inc16 {
 
     PARTS:
    // Put you code here:
-   HalfAdder(a=in[0],b=1,sum=out[0],carry=haddb1);
+   HalfAdder(a=in[0],b[0]=true,sum=out[0],carry=haddb1);
    HalfAdder(a=in[1],b=haddb1,sum=out[1],carry=haddb2);
    HalfAdder(a=in[2],b=haddb2,sum=out[2],carry=haddb3);
    HalfAdder(a=in[3],b=haddb3,sum=out[3],carry=haddb4);
