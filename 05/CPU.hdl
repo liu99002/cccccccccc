@@ -86,9 +86,5 @@ CHIP CPU {
     PC(in=Aout, load=PCload, inc=true, reset=reset, out[0..14]=pc); 
 ///////////////////////////////////////////////////////////////////////////////////////////
     // output
-    And(a=isC, b=d3, out=writeM);         // 寫入M要a=1且d3=1
-
-
-
-   
+    And(a=isC, b=d3, out=writeM);       // 寫入M要a=1且d3=1   
 }
