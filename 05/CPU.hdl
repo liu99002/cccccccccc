@@ -40,4 +40,55 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    // Decoder
+    Or16(a=false, b=instruction, out[15]=isC,
+         out[12]=a, out[11]=c1, out[10]=c2, out[9]=c3, out[8]=c4, out[7]=c5, out[6]=c6, 
+         out[5]=d1, out[4]=d2, out[3]=d3, out[2]=j1, out[1]=j2, out[0]=j3);
+///////////////////////////////////////////////////////////////////////////////////////////
+    // A register
+    Not(in=isC,out=isA);
+	Mux16(a=instruction,b=ALUout,sel=isC,out=toAin);    //若為C指令，則ALUout輸入ARegister
+    Or(a=isA,b=d1,out=loadA);
+    //if isA=0      if isA=0        if isA=1
+    //if d1=0       if d1=1         d1╳  
+    //loadA=0       loadA=1         loadA=1
+	ARegister(in=toAin,load=loadA,out=Aout,out[0..14]=addressM);
+///////////////////////////////////////////////////////////////////////////////////////////
+    // D register
+    And(a=isC, b=d2, out=loadD);    //為C指令且d2=1，則輸入DRegister
+    DRegister(in=ALUout, load=loadD, out=Dout);  
+///////////////////////////////////////////////////////////////////////////////////////////
+    // ALU
+    Mux16(a=Aout, b=inM, sel=a, out=AorM);      //由a決定comp是用A還是M
+    ALU(x=Dout, y=AorM, zx=c1, nx=c2, zy=c3, ny=c4, f=c5, no=c6, out=ALUout, out=outM, zr=zr, ng=ng);
+    // if (zx == 1) set x = 0        // 16-bit constant
+    // if (nx == 1) set x = !x       // bitwise not
+    // if (zy == 1) set y = 0        // 16-bit constant
+    // if (ny == 1) set y = !y       // bitwise not
+    // if (f == 1)  set out = x + y  // integer 2's complement addition
+    // if (f == 0)  set out = x & y  // bitwise and
+    // if (no == 1) set out = !out   // bitwise not
+    // if (out == 0) set zr = 1
+    // if (out < 0) set ng = 1
+///////////////////////////////////////////////////////////////////////////////////////////
+    // JUMP condition
+    Or(a=ng, b=zr, out=zero);             
+    Not(in=zero, out=gt);                 
+    And(a=ng, b=j1, out=JLT);         
+    And(a=zr, b=j2, out=JEQ);        
+    And(a=gt, b=j3, out=JGT);         
+    //JGT 001 comp>0 zr=0,ng=0
+    //JEQ 010 comp=0 zr=1,ng=0
+    //JLT 100 comp<0 zr=0,ng=1
+    Or(a=JGT,b=JEQ,out=JGE);
+    Or(a=JGE,b=JLT,out=JNE);
+    And(a=isC,b=JNE,out=PCload);       // PCload = isC & pass
+    PC(in=Aout, load=PCload, inc=true, reset=reset, out[0..14]=pc); 
+///////////////////////////////////////////////////////////////////////////////////////////
+    // output
+    And(a=isC, b=d3, out=writeM);         // 寫入M要a=1且d3=1
+
+
+
+   
 }
