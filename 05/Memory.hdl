@@ -28,4 +28,17 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+    DMux4Way(in=load, sel=address[13..14], a=RAM16Kfirst, b=RAM16Kend, c=Screenload, d=loadkbd);
+    //loadram1=00×××××××××××××
+    //loadram2=01×××××××××××××  
+    //0~(2^14-1)=16383   為RAM16K位址
+    //loadscreen=10×××××××××××××
+    //2^14~2^14+(2^13-1)==16384~24575 為螢幕位址
+    //loadkbd=110000000000000
+    //24576 為鍵盤位址
+    Or(a=RAM16Kfirst, b=RAM16Kend, out=RAM16Kload);     //只要是這兩者之一就是RAM16K
+    RAM16K(in=in, load=RAM16Kload, address=address[0..13], out=RAM16Kout);
+    Screen(in=in, load=Screenload, address=address[0..12], out=Screenout);
+    Keyboard(out=Keyboardout);
+    Mux4Way16(a=RAM16Kout, b=RAM16Kout, c=Screenout, d=Keyboardout, sel=address[13..14], out=out);
 }
