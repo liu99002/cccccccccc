@@ -10,3 +10,4 @@
 CPU |JUMP condition未完全理解
 Memory|完全理解
 Computer|完全理解
+期中|自己完成，使用chatgpt輔助例如:with open("file.asm", "r")編碼錯誤，使用gpt修正成with open("file.asm", "r", encoding="utf-8")，將組譯的內容輸入到file.asm
