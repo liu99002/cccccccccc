@@ -15,47 +15,65 @@
 (RESTART)
 //螢幕的起始位置存在RAM[0]中
 @SCREEN
-D=A //D=16384       
+D=A 
+//D=16384       
 @0
-M=D	 //RAM[0]=16384
+M=D	 
+//RAM[0]=16384
 /////////////////////////
 (KBDCHECK)
 @KBD //24576
-D=M     //D等於按下的按鍵
+D=M     
+//D等於按下的按鍵
 @BLACK
-D;JGT	//D>0則跳到BLACK函式中
+D;JGT	
+//D>0則跳到BLACK函式中
 @WHITE
-D;JEQ	//D=0則跳到WHITE函式中
+D;JEQ	
+//D=0則跳到WHITE函式中
 @KBDCHECK
-0;JMP   //繼續偵測
+0;JMP   
+//繼續偵測
 //////////////////////////
 (BLACK)
 @1
-M=-1	//將RAM[1]設為-1
+M=-1	
+//將RAM[1]設為-1
 @CHANGE
-0;JMP   //跳到CHANGE
+0;JMP   
+//跳到CHANGE
 //////////////////////////
 (WHITE)
 @1
-M=0	//將RAM[1]設為0
+M=0	
+//將RAM[1]設為0
 @CHANGE
 0;JMP
 //////////////////////////
 (CHANGE)
 @1	
-D=M	//檢查RAM[1]中的顏色,D=M=RAM[1]=0 or -1
+D=M	
+//檢查RAM[1]中的顏色,D=M=RAM[1]=0 or -1
 @0
-A=M	//獲得螢幕的位置,A=M=RAM[0]
-M=D	//將RAM[A]填入顏色,RAM[A]=0 or -1
+A=M	
+//獲得螢幕的位置,A=M=RAM[0]
+M=D	
+//將RAM[A]填入顏色,RAM[A]=0 or -1
 @0
-D=M+1	//將螢幕位置+1,D=RAM[0]+1=螢幕位址+1
-@KBD    //24576
-D=A-D	//D=鍵盤位址-(螢幕位址+1)
+D=M+1	
+//將螢幕位置+1,D=RAM[0]+1=螢幕位址+1
+@KBD   
+ //24576
+D=A-D	
+//D=鍵盤位址-(螢幕位址+1)
 @0
-M=M+1	//RAM[0]=RAM[0]+1
-A=M     //A=螢幕位址+1
+M=M+1	
+//RAM[0]=RAM[0]+1
+A=M     
+//A=螢幕位址+1
 @CHANGE
-D;JGT	//如果D大於0則繼續
+D;JGT	
+//如果D大於0則繼續
 //////////////////////////
 @RESTART
 0;JMP   
